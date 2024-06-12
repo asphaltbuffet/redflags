@@ -1,0 +1,60 @@
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+
+version: 2
+
+before:
+  hooks:
+    - go mod download
+    - go generate ./...
+builds:
+  - flags:
+      - -trimpath
+    ldflags:
+      - "-s -w -X main.version={{ .Version }} -X main.revision={{ .ShortCommit}}"
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - amd64
+      - arm
+      - arm64
+    ignore:
+      - goos: darwin
+        goarch: arm
+upx:
+  - enabled: true
+    compress: best
+
+archives:
+  - format: tgz
+    name_template: >-
+      {{ .ProjectName }}-
+      {{- .Version }}-
+      {{- .Os }}-
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else }}{{ .Arch}}{{ end }}
+      {{- if .Arm }}_v{{ .Arm }}{{ end }}
+    files:
+      - info:
+          mtime: "{{ .CommitDate }}"
+      - src: CHANGELOG*
+        dst: docs
+      - src: README*
+        dst: docs
+      - src: LICENSE*
+        dst: docs
+checksum:
+  name_template: "checksums.txt"
+snapshot:
+  name_template: "{{ .Tag }}-dev"
+changelog:
+  disable: true
+release:
+  github:
+    owner: asphaltbuffet
+    name: redflags
+  prerelease: auto
+announce:
+  skip: "true"
