@@ -353,3 +353,4 @@ issues:
     - path: cmd/
       linters:
         - forbidigo
+    - path: testdata/
