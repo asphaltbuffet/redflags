@@ -1,23 +1,26 @@
 {
-    "[go]": {
-        "editor.formatOnSave": true,
-        "editor.codeActionsOnSave": {
-            "source.organizeImports": "explicit"
-        }
-    },
-    "[go.mod]": {
-        "editor.formatOnSave": true,
-        "editor.codeActionsOnSave": {
-            "source.organizeImports": "explicit"
-        }
-    },
-    "go.useLanguageServer": true,
-    "gopls": {
-        "formatting.local": "github.com/asphaltbuffet/redflags",
-        "formatting.gofumpt": true
-    },
-    "go.lintTool": "golangci-lint",
-    "go.lintFlags": [
-        "--fast"
-    ]
+	"[go]": {
+		"editor.formatOnSave": true,
+		"editor.codeActionsOnSave": {
+			"source.organizeImports": "explicit"
+		}
+	},
+	"[go.mod]": {
+		"editor.formatOnSave": true,
+		"editor.codeActionsOnSave": {
+			"source.organizeImports": "explicit"
+		}
+	},
+	"go.useLanguageServer": true,
+	"gopls": {
+		"formatting.local": "github.com/asphaltbuffet/redflags",
+		"formatting.gofumpt": true
+	},
+	"go.lintTool": "golangci-lint",
+	"go.lintFlags": ["--fast"],
+	"editor.formatOnSave": true,
+	"editor.defaultFormatter": "esbenp.prettier-vscode",
+	"evenBetterToml.formatter.allowedBlankLines": 1,
+	"evenBetterToml.formatter.columnWidth": 3,
+	"yaml.format.enable": false
 }
