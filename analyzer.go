@@ -1,3 +1,5 @@
+// Package redflags provides a linter that enforces consistent long and short flag name pairings
+// in CLI applications using cobra or pflag.
 package redflags
 
 import (
@@ -10,6 +12,7 @@ import (
 	"golang.org/x/tools/go/ast/inspector"
 )
 
+//nolint:gochecknoglobals // replaced by configurable Options in #6
 var flagMappings = map[string]string{
 	"verbose": "v",
 	"v":       "verbose",
@@ -19,6 +22,7 @@ var flagMappings = map[string]string{
 	"h":       "help",
 }
 
+// Options configures the redflags analyzer.
 type Options struct {
 	ShortToLong bool // Enforce short flags determine name of long flags
 	LongToShort bool // Enforce long flags determine name of short flags
@@ -27,9 +31,10 @@ type Options struct {
 // New creates a new redflags analyzer with the given options.
 func New(opts *Options) *analysis.Analyzer {
 	if opts == nil {
+		//nolint:ineffassign,wastedassign // fields wired in #6
 		opts = &Options{
-			ShortToLong: true,
-			LongToShort: true,
+			ShortToLong: true, //nolint:govet // wired in #6
+			LongToShort: true, //nolint:govet // wired in #6
 		}
 	}
 
@@ -45,7 +50,7 @@ func New(opts *Options) *analysis.Analyzer {
 }
 
 func run(pass *analysis.Pass) {
-	inspector := pass.ResultOf[inspect.Analyzer].(*inspector.Inspector)
+	inspector := pass.ResultOf[inspect.Analyzer].(*inspector.Inspector) //nolint:errcheck // inspect.Analyzer always returns *inspector.Inspector; checked by framework
 	filter := []ast.Node{(*ast.CallExpr)(nil)}
 
 	inspector.Preorder(filter, func(node ast.Node) {
@@ -54,7 +59,7 @@ func run(pass *analysis.Pass) {
 }
 
 func visit(pass *analysis.Pass, node ast.Node) {
-	call := node.(*ast.CallExpr)
+	call := node.(*ast.CallExpr) //nolint:errcheck // filter guarantees *ast.CallExpr nodes only
 
 	fn, ok := call.Fun.(*ast.SelectorExpr)
 	if !ok {
