@@ -6,6 +6,7 @@ import (
 	"golang.org/x/tools/go/analysis/analysistest"
 
 	"github.com/asphaltbuffet/redflags"
+	"github.com/asphaltbuffet/redflags/gclplugin"
 )
 
 func TestOptionsDefaults(t *testing.T) {
@@ -64,4 +65,32 @@ func TestFuncLinting(t *testing.T) {
 			analysistest.Run(t, testdata, analyzer, tt.args.pattern)
 		})
 	}
+}
+
+func TestPluginIntegration(t *testing.T) {
+	t.Parallel()
+
+	// Simulate the map[string]any golangci-lint builds from .golangci.yml settings.
+	rawSettings := map[string]any{
+		"use-defaults": false,
+		"mappings": []any{
+			map[string]any{"long": "deploy", "short": "d"},
+		},
+	}
+
+	p, err := gclplugin.New(rawSettings)
+	if err != nil {
+		t.Fatalf("plugin.New: %v", err)
+	}
+
+	analyzers, err := p.BuildAnalyzers()
+	if err != nil {
+		t.Fatalf("BuildAnalyzers: %v", err)
+	}
+
+	if len(analyzers) != 1 {
+		t.Fatalf("expected 1 analyzer, got %d", len(analyzers))
+	}
+
+	analysistest.Run(t, analysistest.TestData(), analyzers[0], "testdata/custom_only")
 }

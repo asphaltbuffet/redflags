@@ -31,7 +31,9 @@
       "mcp__plugin_claude-code-home-manager_serena__write_memory",
       "WebSearch",
       "mcp__plugin_claude-code-home-manager_serena__edit_memory",
-      "mcp__plugin_claude-code-home-manager_serena__replace_content"
+      "mcp__plugin_claude-code-home-manager_serena__replace_content",
+      "mcp__plugin_claude-code-home-manager_serena__find_symbol",
+      "mcp__plugin_claude-code-home-manager_serena__insert_after_symbol"
     ]
   },
   "enableAllProjectMcpServers": true,
