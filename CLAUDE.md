@@ -52,3 +52,17 @@ Tests use `analysistest.Run`, which drives the analyzer against real Go source i
 ## VCS
 
 Use `jj` (jujutsu), not `git`.
+
+## Agent skills
+
+### Issue tracker
+
+Issues live in GitHub Issues at `github.com/asphaltbuffet/redflags`. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Five canonical triage roles with default label names. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context repo: one `CONTEXT.md` + `docs/adr/` at the repo root. See `docs/agents/domain.md`.

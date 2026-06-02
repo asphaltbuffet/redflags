@@ -3,7 +3,8 @@
 version: 2
 
 builds:
-  - env:
+  - main: ./cmd/redflags
+    env:
       - CGO_ENABLED=0
     flags:
       - -trimpath
