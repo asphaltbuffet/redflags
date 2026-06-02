@@ -52,6 +52,7 @@ func TestFuncLinting(t *testing.T) {
 			UseDefaults: false,
 			Mappings:    []redflags.FlagPair{{Long: "deploy", Short: "d"}},
 		}, "testdata/custom_only"}},
+		{"non cobra p", args{nil, "testdata/non_cobra_p"}},
 	}
 
 	for _, tt := range tests {

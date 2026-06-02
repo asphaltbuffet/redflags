@@ -1,0 +1,5 @@
+kind: Added
+body: Use import path to avoid false positives
+time: 2026-06-02T10:07:04.151501801-04:00
+custom:
+    Issue: '#8'

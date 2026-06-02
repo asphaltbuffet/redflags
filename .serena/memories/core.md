@@ -1,20 +1,21 @@
-# Core
+# redflags — Core
 
-`redflags` — a Go static analysis linter that enforces consistent long/short flag name pairings in CLI applications using cobra/pflag.
+Go static analysis linter enforcing consistent long/short cobra/pflag flag name pairings.
+Implements `golang.org/x/tools/go/analysis` interface.
 
-## Source Map
+## Source map
 
-- `analyzer.go` — package `redflags`; exports `New(*Options) *analysis.Analyzer`. Contains `flagMappings`, `Options`, `run`, `visit`.
-- `analyzer_test.go` — uses `analysistest.Run` against `testdata/` subdirs.
-- `cmd/redflags/main.go` — standalone binary entry point; uses `singlechecker.Main`.
-- `testdata/fn_valid/example.go` — valid flag usage (no diagnostics expected).
-- `testdata/fn_invalid_short/example.go` — invalid short flags; `// want` annotations mark expected diagnostics.
+- `analyzer.go` — library root; exports `New(*Options) *analysis.Analyzer`
+- `analyzer_test.go` — tests via `analysistest.Run` + `// want` annotations in testdata
+- `cmd/redflags/main.go` — standalone binary (`singlechecker.Main`)
+- `testdata/<scenario>/example.go` — real Go source used as linter inputs
+- `go.mod`, `go.sum`, `gomod2nix.toml` — module + Nix lockfile (kept in sync)
 
-## Key Invariants
+## Key invariants
 
-- Package is `redflags` (library); binary is `cmd/redflags` (main).
-- `flagMappings` is the canonical source of truth for long↔short pairings.
-- Analyzer detects calls to methods ending in `P` (pflag convention); `VarP` variants shift arg index by 1.
-- The `-V` flag is overridden in main.go to print version (avoids conflict with `version`→`V` mapping).
+- `flagMappings` is bidirectional: both `"verbose"→"v"` and `"v"→"verbose"` are stored
+- `visit` checks method name suffix `P` / `VarP`; `VarP` shifts arg index by 1 (pointer receiver first)
+- Diagnostics use `pass.Reportf`; no diagnostic = silently return
+- `analysistest.Run` matches `// want <regex>` annotations to expected diagnostics
 
-See `mem:tech_stack`, `mem:suggested_commands`, `mem:conventions`, `mem:task_completion`.
+See `mem:tech_stack`, `mem:conventions`, `mem:suggested_commands`, `mem:task_completion`

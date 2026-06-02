@@ -1,7 +1,8 @@
 # Task Completion
 
-Run before considering a coding task done:
+When a coding task is done, run:
 
-1. `mise run lint` — golangci-lint with --fix
-2. `mise run test` — full test suite with race detector
-3. If go.mod/go.sum changed: `mise run mod-tidy` (also updates gomod2nix.toml)
+1. `mise run test` — must pass
+2. `mise run lint` — must pass (golangci-lint --fix included)
+
+For dependency changes also run `mise run mod-tidy`.

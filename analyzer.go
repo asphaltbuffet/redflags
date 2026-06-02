@@ -77,6 +77,11 @@ func run(pass *analysis.Pass, flagMappings map[string]string) {
 	})
 }
 
+var allowedPkgs = map[string]bool{ //nolint:gochecknoglobals // immutable set; package-level constant
+	"github.com/spf13/cobra": true,
+	"github.com/spf13/pflag": true,
+}
+
 func visit(pass *analysis.Pass, node ast.Node, flagMappings map[string]string) {
 	call := node.(*ast.CallExpr) //nolint:errcheck // filter guarantees *ast.CallExpr nodes only
 
@@ -86,6 +91,11 @@ func visit(pass *analysis.Pass, node ast.Node, flagMappings map[string]string) {
 	}
 
 	if !strings.HasSuffix(fn.Sel.Name, "P") {
+		return
+	}
+
+	obj, found := pass.TypesInfo.Uses[fn.Sel]
+	if !found || obj.Pkg() == nil || !allowedPkgs[obj.Pkg().Path()] {
 		return
 	}
 

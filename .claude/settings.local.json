@@ -30,13 +30,17 @@
       "mcp__plugin_claude-code-home-manager_serena__read_memory",
       "mcp__plugin_claude-code-home-manager_serena__write_memory",
       "WebSearch",
-      "mcp__plugin_claude-code-home-manager_serena__edit_memory"
+      "mcp__plugin_claude-code-home-manager_serena__edit_memory",
+      "mcp__plugin_claude-code-home-manager_serena__replace_content"
     ]
   },
   "enableAllProjectMcpServers": true,
   "enabledMcpjsonServers": [
     "serena"
   ],
+  "enabledPlugins": {
+    "gopls-lsp@claude-plugins-official": false
+  },
   "outputStyle": "Explanatory",
   "spinnerTipsEnabled": false,
   "prefersReducedMotion": true
