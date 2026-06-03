@@ -1,3 +1,5 @@
+// Package redflags provides a linter that enforces consistent long and short flag name pairings
+// in CLI applications using cobra or pflag.
 package redflags
 
 import (
@@ -10,51 +12,78 @@ import (
 	"golang.org/x/tools/go/ast/inspector"
 )
 
-var flagMappings = map[string]string{
-	"verbose": "v",
-	"v":       "verbose",
-	"version": "V",
-	"V":       "version",
-	"help":    "h",
-	"h":       "help",
+//nolint:gochecknoglobals // package-level constant; immutable after init
+var defaultFlagPairs = []FlagPair{
+	{Long: "help", Short: "h"},
+	{Long: "verbose", Short: "v"},
+	{Long: "output", Short: "o"},
 }
 
+// FlagPair is a long/short flag name pairing.
+type FlagPair struct {
+	Long  string
+	Short string
+}
+
+// Options configures the redflags analyzer.
 type Options struct {
-	ShortToLong bool // Enforce short flags determine name of long flags
-	LongToShort bool // Enforce long flags determine name of short flags
+	UseDefaults bool
+	Mappings    []FlagPair
 }
 
 // New creates a new redflags analyzer with the given options.
 func New(opts *Options) *analysis.Analyzer {
 	if opts == nil {
-		opts = &Options{
-			ShortToLong: true,
-			LongToShort: true,
-		}
+		opts = &Options{UseDefaults: true, Mappings: nil}
 	}
+
+	mappings := buildMappings(opts)
 
 	return &analysis.Analyzer{
 		Name: "redflags",
 		Doc:  "ensure consistent long and short flag names in cli applications",
 		Run: func(pass *analysis.Pass) (any, error) {
-			run(pass)
+			run(pass, mappings)
 			return nil, nil
 		},
 		Requires: []*analysis.Analyzer{inspect.Analyzer},
 	}
 }
 
-func run(pass *analysis.Pass) {
-	inspector := pass.ResultOf[inspect.Analyzer].(*inspector.Inspector)
+func buildMappings(opts *Options) map[string]string {
+	m := make(map[string]string)
+
+	if opts.UseDefaults {
+		for _, p := range defaultFlagPairs {
+			m[p.Long] = p.Short
+			m[p.Short] = p.Long
+		}
+	}
+
+	for _, p := range opts.Mappings {
+		m[p.Long] = p.Short
+		m[p.Short] = p.Long
+	}
+
+	return m
+}
+
+func run(pass *analysis.Pass, flagMappings map[string]string) {
+	inspector := pass.ResultOf[inspect.Analyzer].(*inspector.Inspector) //nolint:errcheck // inspect.Analyzer always returns *inspector.Inspector; checked by framework
 	filter := []ast.Node{(*ast.CallExpr)(nil)}
 
 	inspector.Preorder(filter, func(node ast.Node) {
-		visit(pass, node)
+		visit(pass, node, flagMappings)
 	})
 }
 
-func visit(pass *analysis.Pass, node ast.Node) {
-	call := node.(*ast.CallExpr)
+var allowedPkgs = map[string]bool{ //nolint:gochecknoglobals // immutable set; package-level constant
+	"github.com/spf13/cobra": true,
+	"github.com/spf13/pflag": true,
+}
+
+func visit(pass *analysis.Pass, node ast.Node, flagMappings map[string]string) {
+	call := node.(*ast.CallExpr) //nolint:errcheck // filter guarantees *ast.CallExpr nodes only
 
 	fn, ok := call.Fun.(*ast.SelectorExpr)
 	if !ok {
@@ -62,6 +91,11 @@ func visit(pass *analysis.Pass, node ast.Node) {
 	}
 
 	if !strings.HasSuffix(fn.Sel.Name, "P") {
+		return
+	}
+
+	obj, found := pass.TypesInfo.Uses[fn.Sel]
+	if !found || obj.Pkg() == nil || !allowedPkgs[obj.Pkg().Path()] {
 		return
 	}
 

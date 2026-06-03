@@ -1,0 +1,49 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cat:*)",
+      "Bash(fd:*)",
+      "Bash(jj diff:*)",
+      "Bash(jj log:*)",
+      "Bash(jj new:*)",
+      "Bash(ls:*)",
+      "Bash(mise run build:*)",
+      "Bash(mise run dev:*)",
+      "Bash(mise run lint:*)",
+      "Bash(mise run test:*)",
+      "Bash(mkdir:*)",
+      "Bash(test:*)",
+      "Bash(wc:*)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:pkg.go.dev)",
+      "Bash(gotestsum *)",
+      "Skill(update-config)",
+      "mcp__plugin_github_github__issue_write",
+      "mcp__plugin_github_github__issue_read",
+      "mcp__plugin_github_github__sub_issue_write",
+      "mcp__plugin_github_github__add_issue_comment",
+      "mcp__plugin_github_github__pull_request_read",
+      "mcp__plugin_github_github__list_pull_requests",
+      "mcp__plugin_claude-code-home-manager_serena__initial_instructions",
+      "mcp__plugin_claude-code-home-manager_serena__onboarding",
+      "mcp__plugin_claude-code-home-manager_serena__get_symbols_overview",
+      "mcp__plugin_claude-code-home-manager_serena__read_memory",
+      "mcp__plugin_claude-code-home-manager_serena__write_memory",
+      "WebSearch",
+      "mcp__plugin_claude-code-home-manager_serena__edit_memory",
+      "mcp__plugin_claude-code-home-manager_serena__replace_content",
+      "mcp__plugin_claude-code-home-manager_serena__find_symbol",
+      "mcp__plugin_claude-code-home-manager_serena__insert_after_symbol"
+    ]
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "serena"
+  ],
+  "enabledPlugins": {
+    "gopls-lsp@claude-plugins-official": false
+  },
+  "outputStyle": "Explanatory",
+  "spinnerTipsEnabled": false,
+  "prefersReducedMotion": true
+}

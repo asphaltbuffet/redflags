@@ -1,3 +1,4 @@
+// Package main is the entry point for the redflags standalone linter binary.
 package main
 
 import (
@@ -10,6 +11,7 @@ import (
 	"github.com/asphaltbuffet/redflags"
 )
 
+//nolint:gochecknoglobals // set by build script via ldflags
 var (
 	version  = "dev" // set by build script
 	revision = "n/a" // set by build script
@@ -26,7 +28,7 @@ type versionFlag struct{}
 func (versionFlag) String() string   { return "" }
 func (versionFlag) IsBoolFlag() bool { return true }
 func (versionFlag) Set(string) error {
-	fmt.Printf("%s (%s)\n", version, revision)
+	fmt.Printf("%s (%s)\n", version, revision) //nolint:forbidigo // intentional version output to stdout
 	os.Exit(0)
 	return nil
 }

@@ -1,0 +1,5 @@
+kind: Added
+body: Wire options to golangci-lint settings
+time: 2026-06-02T18:32:13.674762167-04:00
+custom:
+    Issue: '#9'
